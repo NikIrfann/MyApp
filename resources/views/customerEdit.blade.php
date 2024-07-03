@@ -20,61 +20,67 @@
         </div>
         <!-- /.content-header -->
 
-        <body>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="/updateCustomer/{{ $data->id }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Customer Name</label>
+                                    <input required type="text" name="name" class="form-control" id="name"
+                                        value="{{ old('name', $data->name) }}">
+                                    @error('name')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-8">
-                        <div class="card">
-                            <div class="card-body">
-                                <form action="/updateCustomer/{{ $data->id }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Customer Name</label>
-                                        <input required type="text" name="name" class="form-control" id="name"
-                                            aria-describedby="emailHelp" value="{{ $data->name }}">
-                                    </div>
+                                <div class="mb-3">
+                                    <label for="kg" class="form-label">Kg</label>
+                                    <input required type="text" name="kg" class="form-control" id="kg"
+                                        value="{{ old('kg', $data->kg) }}">
+                                    @error('kg')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="mb-3">
-                                        <label for="kg" class="form-label">Kg</label>
-                                        <input required type="text" name="kg" class="form-control" id="kg"
-                                            aria-describedby="emailHelp" value="{{ $data->kg }}">
-                                    </div>
+                                <div class="mb-3">
+                                    <label for="phoneno" class="form-label">Phone Number</label>
+                                    <input required type="text" name="phoneno" class="form-control" id="phoneno"
+                                        value="{{ old('phoneno', $data->phoneno) }}">
+                                    @error('phoneno')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="mb-3">
-                                        <label for="phoneno" class="form-label">Phone Number</label>
-                                        <input required type="text" name="phoneno" class="form-control" id="phoneno"
-                                            aria-describedby="emailHelp" value="{{ $data->phoneno }}">
-                                    </div>
+                                <div class="mb-3">
+                                    <label for="pickuptime" class="form-label">Pickup Time</label>
+                                    <input required type="text" name="pickuptime" class="form-control" id="pickuptime"
+                                        value="{{ old('pickuptime', $data->pickuptime) }}">
+                                    @error('pickuptime')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="mb-3">
-                                        <label for="pickuptime" class="form-label">Pickup Time</label>
-                                        <select required name="pickuptime" class="form-select ml-2" id="pickuptime"
-                                            aria-label="pickuptime">
-                                            <option selected>{{ $data->pickuptime }}</option>
-                                            <option value="1">AM</option>
-                                            <option value="2">PM</option>
-                                        </select>
-                                    </div>
+                                <div class="mb-3">
+                                    <label for="datepicker" class="form-label">Date</label>
+                                    <input required type="text" name="date" class="form-control" id="datepicker"
+                                        value="{{ old('date', $data->date) }}">
+                                    @error('date')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="mb-3">
-                                        <label for="datepicker" class="form-label">Date</label>
-                                        <input required type="text" name="date" class="form-control" id="datepicker"
-                                            value="{{ $data->date }}">
-                                    </div>
-
-                                    <button type="submit" class="btn btn-light">Submit</button>
-                                </form>
-                            </div>
+                                <button type="submit" class="btn btn-light">Submit</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </body>
+        </div>
     </div>
 @endsection
-
 
 @push('scripts')
     <!-- Optional JavaScript; choose one of the two! -->
@@ -85,8 +91,7 @@
     <!-- Option 2: Separate Popper and Bootstrap JS -->
 
     {{-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script> --}}
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script> --}}
 
     <!-- jQuery (full version) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -97,11 +102,27 @@
     <!-- Bootstrap Datepicker JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
+    <!-- Bootstrap Timepicker JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+
     <script>
         $(document).ready(function() {
             $('#datepicker').datepicker({
                 format: 'dd/mm/yyyy', // Set the format to display
                 autoclose: true, // Close the datepicker after selection
+            });
+
+            $('#pickuptime').timepicker({
+                timeFormat: 'h:mm p',
+                interval: 60,
+                minTime: '7:00am',
+                maxTime: '11:00pm',
+                defaultTime: '8:00am',
+                // startTime: '12:00am',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true
             });
         });
     </script>

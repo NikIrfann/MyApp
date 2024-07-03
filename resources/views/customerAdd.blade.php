@@ -59,14 +59,8 @@
 
                                     <div class="mb-3">
                                         <label for="pickuptime" class="form-label">Pickup Time</label>
-                                        <select name="pickuptime" class="form-select ml-2" id="pickuptime"
-                                            aria-label="pickuptime">
-                                            <option value="">Select AM/PM</option>
-                                            <option value="1" @if (old('pickuptime') == '1') selected @endif>AM
-                                            </option>
-                                            <option value="2" @if (old('pickuptime') == '2') selected @endif>PM
-                                            </option>
-                                        </select>
+                                        <input type="text" name="pickuptime" class="form-control" id="pickuptime"
+                                            aria-describedby="pickuptimeHelp" value="{{ old('pickuptime') }}">
                                         @error('pickuptime')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -99,25 +93,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Option 2: Separate Popper and Bootstrap JS -->
-
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-
 
     <!-- jQuery (full version) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Bootstrap 4 JS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
     <!-- Bootstrap Datepicker JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- Bootstrap Timepicker JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 
     <script>
         $(document).ready(function() {
             $('#datepicker').datepicker({
                 format: 'dd/mm/yyyy', // Set the format to display
                 autoclose: true, // Close the datepicker after selection
+            });
+
+            $('#pickuptime').timepicker({
+                timeFormat: 'h:mm p',
+                interval: 60,
+                minTime: '7:00am',
+                maxTime: '11:00pm',
+                defaultTime: '8:00am',
+                // startTime: '12:00am',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true
             });
         });
     </script>

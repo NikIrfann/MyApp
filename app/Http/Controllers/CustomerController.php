@@ -14,8 +14,7 @@ class CustomerController extends Controller
             $data = Customer::where('name', 'LIKE', '%' . $request->search . '%')->paginate(10);
         } else {
             $data = Customer::paginate(10);
-        };
-
+        }
 
         return view('customerList', compact('data'));
     }
@@ -27,7 +26,6 @@ class CustomerController extends Controller
 
     public function insertNewCustomer(Request $request)
     {
-        // Validate the input data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'kg' => 'required|integer',
@@ -37,30 +35,26 @@ class CustomerController extends Controller
         ]);
 
         try {
-            // Convert the date format
             $formattedDate = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d');
+            $formattedPickupTime = Carbon::createFromFormat('h:i A', $request->pickuptime)->format('h:i A');
 
-            // Create a new customer with the formatted date
             Customer::create([
                 'name' => $request->name,
                 'kg' => $request->kg,
                 'phoneno' => $request->phoneno,
-                'pickuptime' => $request->pickuptime,
+                'pickuptime' => $formattedPickupTime,
                 'date' => $formattedDate,
             ]);
 
             return redirect()->route('customer')->with('success', 'New customer successfully added');
         } catch (\Exception $e) {
-            // Handle exception: Display error message and redirect back to form
             return redirect()->back()->withInput()->with('error', 'Failed to add new customer. Please try again.');
         }
     }
 
-
     public function editCustomer($id)
     {
         $data = Customer::find($id);
-        //dd($data);
         return view('customerEdit', compact('data'));
     }
 
@@ -71,27 +65,26 @@ class CustomerController extends Controller
             'kg' => 'required|numeric',
             'phoneno' => 'required|string|max:255',
             'pickuptime' => 'required|string|max:255',
-            'date' => 'required|date_format:d/m/Y', // Ensure date is in dd/mm/yyyy format
+            'date' => 'required|date_format:d/m/Y',
         ]);
-        // Convert date format from dd/mm/yyyy to yyyy-mm-dd for MySQL
-        $date = \Carbon\Carbon::createFromFormat('d/m/Y', $validated['date'])->format('Y-m-d');
 
-        // Update the customer record in the database
+        $date = Carbon::createFromFormat('d/m/Y', $validated['date'])->format('Y-m-d');
+        $formattedPickupTime = Carbon::createFromFormat('h:i A', $request->pickuptime)->format('h:i A');
+
         $customer = Customer::findOrFail($id);
         $customer->name = $validated['name'];
         $customer->kg = $validated['kg'];
         $customer->phoneno = $validated['phoneno'];
-        $customer->pickuptime = $validated['pickuptime'];
-        $customer->date = $date; // Use the converted date format
+        $customer->pickuptime = $formattedPickupTime;
+        $customer->date = $date;
         $customer->save();
 
-        // Redirect back with success message or handle as needed
         return redirect()->route('customer')->with('success', 'Customer data updated successfully.');
     }
 
     public function deleteCustomer($id)
     {
-        $data = customer::find($id);
+        $data = Customer::find($id);
         $data->delete();
         return redirect()->route('customer')->with('success', 'Customer successfully deleted');
     }
