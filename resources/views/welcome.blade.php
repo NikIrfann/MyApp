@@ -228,7 +228,7 @@
                 <!-- /.row -->
 
                 <!-- TABLE: LATEST ORDERS -->
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-header border-transparent">
                         <h3 class="card-title">Latest Orders</h3>
 
@@ -330,7 +330,7 @@
                             Orders</a>
                     </div>
                     <!-- /.card-footer -->
-                </div>
+                </div> --}}
                 <!-- /.card -->
             </div>
             <!-- /.col -->
