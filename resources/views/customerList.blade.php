@@ -8,6 +8,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
         integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <!-- Custom CSS for uniform button sizes -->
+    <style>
+        .btn-uniform {
+            width: 100px;
+            /* Adjust the width as needed */
+            height: 38px;
+            /* Adjust the height as needed to match the default button height */
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Make text bold on row hover */
+        .table-hover tbody tr:hover td {
+            font-weight: bold;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -31,54 +50,62 @@
         <!-- /.content-header -->
 
         <div class='container'>
-            <a href="/customerAdd" class="btn btn-success mb-4">Add New Customer</a>
+            <a href="/customerAdd" class="btn btn-primary mb-4">Add New Customer</a>
 
             <div class="row g-3 align-items-center mt-2">
                 <div class="col-auto">
                     <form action="/customer" method="GET">
-                        <div class="input-group mb-2">
+                        <div class="input-group mb-3">
                             <input type="search" name="search" class="form-control" placeholder="Search...">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="submit">
+                                <button class="btn btn-outline-primary" type="submit">
                                     <i class="fas fa-search"></i>
                                 </button>
+                                <a href="{{ route('customer') }}" class="btn btn-outline-primary">
+                                    Clear
+                                </a>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <div class="row">
-                <table class="table table-hover">
+            <div class="row col-auto">
+                <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col">No.</th>
+                            {{-- <th scope="col">No.</th> --}}
+                            <th scope="col" class="text-center">Kg</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Kg</th>
-                            <th scope="col">Phone No</th>
-                            <th scope="col">Pick Up Time</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" class="text-center">Phone No</th>
+                            <th scope="col" class="text-center">Pick Up Time</th>
+                            <th scope="col" class="text-center">Date</th>
+                            <th scope="col" class="text-center">Price (RM)</th>
+                            <th scope="col" class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @php
+                        {{-- @php
                             $no = 1;
-                        @endphp
+                        @endphp --}}
 
                         @foreach ($data as $index => $row)
                             <tr>
-                                <th scope="row">{{ $index + $data->firstItem() }}</th>
+                                {{-- <th scope="row">{{ $index + $data->firstItem() }}</th> --}}
+                                <td class="text-center">{{ $row->kg }}</td>
                                 <td>{{ $row->name }}</td>
-                                <td>{{ $row->kg }}</td>
-                                <td>0{{ $row->phoneno }}</td>
-                                <td>{{ $row->pickuptime }}</td>
-                                <td>{{ $row->date }}</td>
+                                <td class="text-center">0{{ $row->phoneno }}</td>
+                                <td class="text-center">{{ $row->pickuptime }}</td>
+                                <td class="text-center">{{ $row->date }}</td>
+                                <td class="text-center">{{ $row->kg * 12 }}</td>
 
-                                <td>
-                                    <a href="/editCustomer/{{ $row->id }}" class="btn btn-warning">Edit</a>
-                                    <a href="#" class="btn btn-danger delete" data-id="{{ $row->id }} "
-                                        data-name="{{ $row->name }}">Delete</a>
+                                <td class="text-center">
+                                    <a href="{{ route('markCompleted', $row->id) }}"
+                                        class="btn btn-success btn-uniform me-2">Completed</a>
+                                    <a href="/editCustomer/{{ $row->id }}"
+                                        class="btn btn-warning me-2 btn-uniform">Edit</a>
+                                    <a href="#" class="btn btn-danger delete  btn-uniform"
+                                        data-id="{{ $row->id }} " data-name="{{ $row->name }}">Delete</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -153,7 +180,7 @@
                 "onclick": null,
                 "showDuration": "300",
                 "hideDuration": "1000",
-                "timeOut": "1000",
+                "timeOut": "2000",
                 "extendedTimeOut": "1000",
                 "showEasing": "swing",
                 "hideEasing": "linear",

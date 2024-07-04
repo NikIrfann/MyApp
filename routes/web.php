@@ -26,3 +26,9 @@ Route::get('/editCustomer/{id}', [CustomerController::class, 'editCustomer'])->n
 Route::post('/updateCustomer/{id}', [CustomerController::class, 'updateCustomer'])->name('updateCustomer');
 
 Route::get('/deleteCustomer/{id}', [CustomerController::class, 'deleteCustomer'])->name('deleteCustomer');
+
+// Action: Completed will redirect the data to completed list
+Route::get('/markCompleted/{id}', [CustomerController::class, 'markCompleted'])->name('markCompleted');
+Route::get('/completedOrders', [CustomerController::class, 'completedOrders'])->name('completedOrders');
+// New route for undoing delete
+Route::post('/undoDelete/{id}', [CustomerController::class, 'undoDelete'])->name('undoDelete');
