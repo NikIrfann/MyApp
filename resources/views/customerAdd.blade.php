@@ -68,7 +68,7 @@
 
                                     <div class="mb-3">
                                         <label for="datepicker" class="form-label">Date</label>
-                                        <input type="text" name="date" class="form-control" id="datepicker"
+                                        <input type="date" name="date" class="form-control" id="datepicker"
                                             value="{{ old('date') }}">
                                         @error('date')
                                             <div class="text-danger">{{ $message }}</div>
@@ -108,10 +108,10 @@
 
     <script>
         $(document).ready(function() {
-            $('#datepicker').datepicker({
-                format: 'dd/mm/yyyy', // Set the format to display
-                autoclose: true, // Close the datepicker after selection
-            });
+            // $('#datepicker').datepicker({
+            //     format: 'dd/mm/yyyy', // Set the format to display
+            //     autoclose: true, // Close the datepicker after selection
+            // });
 
             $('#pickuptime').timepicker({
                 timeFormat: 'h:mm p',

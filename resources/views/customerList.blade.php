@@ -112,7 +112,7 @@
                     </tbody>
                 </table>
 
-                {{ $data->links() }}
+                {{ $data->appends(request()->query())->links() }}
             </div>
         </div>
     </div>

@@ -38,19 +38,18 @@ class CustomerController extends Controller
             'kg' => 'required|integer',
             'phoneno' => 'required|string|max:15',
             'pickuptime' => 'required|string',
-            'date' => 'required|date_format:d/m/Y',
+            'date' => 'required|date_format:Y-m-d',
         ]);
 
         try {
-            $formattedDate = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d');
-            $formattedPickupTime = Carbon::createFromFormat('h:i A', $request->pickuptime)->format('h:i A');
+            $formattedPickupTime = Carbon::createFromFormat('h:i A', $validated['pickuptime'])->format('h:i A');
 
             Customer::create([
-                'name' => $request->name,
-                'kg' => $request->kg,
-                'phoneno' => $request->phoneno,
+                'name' => $validated['name'],
+                'kg' => $validated['kg'],
+                'phoneno' => $validated['phoneno'],
                 'pickuptime' => $formattedPickupTime,
-                'date' => $formattedDate,
+                'date' => $validated['date'],
             ]);
 
             return redirect()->route('customer')->with('success', 'New customer successfully added');
@@ -58,6 +57,7 @@ class CustomerController extends Controller
             return redirect()->back()->withInput()->with('error', 'Failed to add new customer. Please try again.');
         }
     }
+
 
     public function editCustomer($id)
     {
@@ -72,22 +72,22 @@ class CustomerController extends Controller
             'kg' => 'required|numeric',
             'phoneno' => 'required|string|max:255',
             'pickuptime' => 'required|string|max:255',
-            'date' => 'required|date_format:d/m/Y',
+            'date' => 'required|date_format:Y-m-d',
         ]);
 
-        $date = Carbon::createFromFormat('d/m/Y', $validated['date'])->format('Y-m-d');
-        $formattedPickupTime = Carbon::createFromFormat('h:i A', $request->pickuptime)->format('h:i A');
+        $formattedPickupTime = Carbon::createFromFormat('h:i A', $validated['pickuptime'])->format('h:i A');
 
         $customer = Customer::findOrFail($id);
         $customer->name = $validated['name'];
         $customer->kg = $validated['kg'];
         $customer->phoneno = $validated['phoneno'];
         $customer->pickuptime = $formattedPickupTime;
-        $customer->date = $date;
+        $customer->date = $validated['date']; // Assign validated date directly
         $customer->save();
 
         return redirect()->route('customer')->with('success', 'Customer data updated successfully.');
     }
+
 
     public function deleteCustomer($id)
     {
@@ -101,6 +101,10 @@ class CustomerController extends Controller
         // Fetch the customer data by id
         $customer = Customer::find($id);
 
+        if (!$customer) {
+            return redirect()->route('customer')->with('error', 'Customer not found.');
+        }
+
         // Store the completed order in session
         $completedOrders = Session::get('completedOrders', []);
         $completedOrders[] = $customer;
@@ -109,17 +113,7 @@ class CustomerController extends Controller
         // Remove the customer from the main list
         $customer->delete();
 
-        // Check if the current page is empty
-        $page = request()->input('page', 1); // Get current page or default to 1
-        $perPage = 10; // Number of items per page
-        $totalItems = Customer::count();
-        $totalPages = ceil($totalItems / $perPage);
-
-        // Redirect to previous page if current page becomes empty
-        if ($page > 1 && $page > $totalPages) {
-            return redirect()->route('customer', ['page' => $totalPages])->with('success', 'Order marked as completed and moved to Completed Orders.');
-        }
-
+        // Redirect to the correct page
         return redirect()->route('customer')->with('success', 'Order marked as completed and moved to Completed Orders.');
     }
 

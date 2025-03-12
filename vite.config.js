@@ -8,4 +8,12 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    server: {
+        host: '0.0.0.0',
+        port: process.env.PORT || 5173,
+        strictPort: true,
+        hmr: {
+            host: process.env.APP_URL ? new URL(process.env.APP_URL).hostname : 'localhost',
+        },
+    }
 });
